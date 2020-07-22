@@ -218,4 +218,36 @@ my Haskell cheatsheet repository
     maximum = foldr1 max
     minimum = foldr1 min
     ```
+## Monad
+- ``` haskell
+    (>>=) :: Monad m => m a -> (a -> m b) -> m b
+    -- takes 
+    --     a monadic parameter a and 
+    --     a function which takes an unpacked value a and computes a new value b from the old value a
+    --     (b) which is then repacked into the same monad as a was
+    
+    (>>) :: Monad m => m a -> m b -> m b
 
+    
+    return :: Monad m => a -> m a
+    -- packs value a into a monad
+    
+    main :: IO ()
+    main = do
+        putStrLn "Please input a string"
+        len <- readlen
+        putStrLn $ "The length of that string is " ++ show len
+    readlen :: IO Int
+    readlen = do
+        str <- getLine
+        return (length str)
+    ```
+- ``` haskell
+    -- do block
+    countDown :: Int -> IO ()
+    countDown n
+        | n < 0 = putStrLn "Done."
+        | otherwise = do
+            print n
+            countDown $ n - 1
+    ```
