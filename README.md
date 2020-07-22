@@ -136,6 +136,13 @@ my Haskell cheatsheet repository
             Node k v (insert_bst l ik iv) r
         else
             Node k v l (insert_bst r ik iv)
+
+    tree_to_list :: Tree a -> [a]
+    tree_to_list Leaf = []
+    tree_to_list (Node a l r) = smaller ++ [a] ++ larger
+        where 
+            smaller = tree_to_list l 
+            larger  = tree_to_list r
     ```
 ### Polymorphic Tree
 - ``` haskell
@@ -148,6 +155,14 @@ my Haskell cheatsheet repository
 
     search_bst :: Ord k => Tree k v -> k -> Maybe v
     ```
+## Linked List
+- ``` haskell
+    data List a = Empty | Node a (List a)
+    ```
+## Meta Tree
+- ``` haskell
+    data Mtree a = Mnode a [Mtree a]
+    ```
 ## High order function
 - ``` haskell
     filter :: (a -> Bool) -> [a] -> [a]
@@ -155,9 +170,24 @@ my Haskell cheatsheet repository
     filter f (x:xs) =
         if f x then x:fxs else fxs
             where fxs = filter f xs
+    -- Using list comprehension: [x | x <- list, f x]
+    -- Using foldr: foldr ((:).f) []
     ```
 - ``` haskell
     map :: (a -> b) -> [a] -> [b]
+    map _ []     = []
+    map f (x:xs) = f x : map f xs
+    -- Using list comprehension:  [f x | x <- list]
+    -- Using foldr: foldr (\x -> if f x then (x:) else id) []
+    ```
+- ``` haskell
+    zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
+    concatMap :: (a -> [b]) -> [a] -> [b]
+    ```
+- ``` haskell
+    flip :: (a -> b -> c) -> b -> a -> c
+    any :: (a -> Bool) -> [a] -> Bool
+    all :: (a -> Bool) -> [a] -> Bool
     ```
 ## Functional design patterns
 - <img width="50%" src="./docs/1.jpg"/>
@@ -227,7 +257,7 @@ my Haskell cheatsheet repository
     --     (b) which is then repacked into the same monad as a was
     
     (>>) :: Monad m => m a -> m b -> m b
-
+    -- 比如第一个m a 是Maybe a, 它是Nothing的话, 无论m b是啥, 直接输出的是Nothing
     
     return :: Monad m => a -> m a
     -- packs value a into a monad
